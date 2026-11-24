@@ -73,8 +73,8 @@ export default defineConfig(({ mode, command }) => {
     server: {
       port: 8080,
       open: false,
-      // v0 预览沙箱域名
-      allowedHosts: ['workspace-sfrw6gav-a3c0535a7ce7e9bd.v0.build']
+      // v0 预览沙箱域名（每次会话的子域名会变化，故按后缀放行）
+      allowedHosts: ['.v0.build', '.vercel.run']
     },
 
     build: {
