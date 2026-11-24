@@ -1,5 +1,6 @@
 // 本地预览替身：内网私有包 auth-layout-zw 不可访问时由 vite.config.js 自动启用。
-// 提供模拟登录用户与全部菜单权限，接口请求统一返回空数据，便于直接查看页面。
+// 提供模拟登录用户与全部菜单权限，接口请求由 dev-stubs/mock 按路径返回业务数据。
+import { mockRequest } from './mock/index.js';
 
 const MOCK_TOKEN = 'dev-stub-token';
 
@@ -8,7 +9,7 @@ permissions.includes = () => true;
 
 const getters = {
   token: MOCK_TOKEN,
-  name: '张老师',
+  name: '朱晓雯',
   avatar: '',
   tenantId: 'dev-tenant',
   city: { code: '320100', name: '南京市' },
@@ -31,15 +32,9 @@ export const store = {
   commit: () => {}
 };
 
-function emptyResponse(config) {
-  console.warn('[dev-stub] 已拦截接口请求:', config && config.url);
-  const data = Object.assign([], { records: [], list: [], rows: [], total: 0 });
-  return Promise.resolve({ code: 200, msg: 'ok', data, rows: [], total: 0 });
-}
-
-export const request = emptyResponse;
-export const noTokenService = emptyResponse;
-export const mingleAxios = emptyResponse;
+export const request = mockRequest;
+export const noTokenService = mockRequest;
+export const mingleAxios = mockRequest;
 
 export const mixin = {
   avatarLoadError: false,
