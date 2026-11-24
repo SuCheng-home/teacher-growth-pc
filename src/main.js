@@ -32,7 +32,8 @@ Vue.use(AiChat, {
 
 // 挂载应用：先接入 auth-layout-zw 路由守卫，再实例化根组件
 function bootstrap() {
-  routerHandler(router);
+  // 临时注释：跳过 auth-layout-zw 路由守卫，便于本地预览
+  // routerHandler(router);
   new Vue({
     router,
     store,
@@ -43,6 +44,8 @@ function bootstrap() {
 }
 
 // 完整启用鉴权：initApp 成功后再挂载应用，失败则输出带应用前缀的错误日志
-initApp()
-  .then(bootstrap)
-  .catch(err => console.error('[teacher-growth-pc] initApp failed:', err));
+// 临时注释：跳过 initApp 登录初始化，直接挂载应用以便本地预览
+// initApp()
+//   .then(bootstrap)
+//   .catch(err => console.error('[teacher-growth-pc] initApp failed:', err));
+bootstrap();

@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
+import { existsSync } from 'node:fs'
 import { defineConfig, loadEnv } from 'vite'
 import vue2 from '@vitejs/plugin-vue2'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
@@ -7,6 +8,19 @@ export default defineConfig(({ mode, command }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const envTarget = env.VITE_ENV_TARGET || mode
   const isBuild = command === 'build'
+
+  // 内网私有包（auth-layout-zw 等）未安装时（如外网沙箱预览），自动改用 dev-stubs 下的本地替身
+  const useAuthStubs = !isBuild && !existsSync(fileURLToPath(new URL('./node_modules/auth-layout-zw/package.json', import.meta.url)))
+  const stub = file => fileURLToPath(new URL(`./dev-stubs/${file}`, import.meta.url))
+  const authStubAliases = useAuthStubs
+    ? [
+        { find: /^auth-layout-zw$/, replacement: stub('auth-layout-zw.js') },
+        { find: /^auth-layout-components\/.*\.css$/, replacement: stub('empty.css') },
+        { find: /^auth-zw-components\/vue\/FileUploader$/, replacement: stub('FileUploader.js') },
+        { find: /^auth-zw-components\/vue\/RichTextEditor$/, replacement: stub('RichTextEditor.js') }
+      ]
+    : []
+  const privateDeps = ['auth-layout-zw', 'auth-layout-components', 'auth-zw-components', 'cos-js-sdk-v5', 'vod-js-sdk-v6', 'spark-md5', 'compressorjs', 'js-md5']
 
   return {
     base: isBuild ? '/thDevelopment/' : '/',
@@ -24,10 +38,11 @@ export default defineConfig(({ mode, command }) => {
     ],
 
     resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-        vue: 'vue/dist/vue.esm.js'
-      },
+      alias: [
+        ...authStubAliases,
+        { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
+        { find: /^vue$/, replacement: 'vue/dist/vue.esm.js' }
+      ],
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
     },
 
@@ -57,7 +72,9 @@ export default defineConfig(({ mode, command }) => {
 
     server: {
       port: 8080,
-      open: false
+      open: false,
+      // v0 预览沙箱域名
+      allowedHosts: ['workspace-sfrw6gav-a3c0535a7ce7e9bd.v0.build']
     },
 
     build: {
@@ -98,7 +115,7 @@ export default defineConfig(({ mode, command }) => {
         // cos-js-sdk-v5 / vod-js-sdk-v6 等 CJS 包，不预构建会报 "does not provide an export named 'default'"，
         // 导致懒加载路由组件解析失败、页面跳转卡死
         'auth-zw-components', 'cos-js-sdk-v5', 'vod-js-sdk-v6', 'spark-md5', 'compressorjs', 'js-md5'
-      ]
+      ].filter(dep => !useAuthStubs || !privateDeps.includes(dep))
     }
   }
 })

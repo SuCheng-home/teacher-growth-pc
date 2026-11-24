@@ -11,11 +11,17 @@ const router = new Router({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (!getToken()) {
-    gotoLoginPage();
-    return
+  // 临时注释：跳过登录校验，便于本地预览
+  // if (!getToken()) {
+  //   gotoLoginPage();
+  //   return
+  // }
+  // 未登录时指标接口会失败，捕获错误避免阻塞路由跳转
+  try {
+    await store.dispatch('archives/initIndexList');
+  } catch (err) {
+    console.warn('[teacher-growth-pc] initIndexList failed:', err);
   }
-  await store.dispatch('archives/initIndexList');
   next();
 });
 
