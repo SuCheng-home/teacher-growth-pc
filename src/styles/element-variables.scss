@@ -1,0 +1,14 @@
+/**
+ * Element UI 主题定制
+ * 把框架主色（$--color-primary）整体覆盖为全站设计令牌里的品牌绿，
+ * 使 el-button--primary、el-checkbox、el-radio、el-switch、el-pagination、
+ * el-date-picker 等所有依赖主色的组件自动与页面视觉统一，无需再逐个写选择器覆盖。
+ * 色值与 global.scss 中 :root 的 --green 保持一致（换主题需同步两处）。
+ *
+ * 字体路径指向 element-ui 已编译好的字体目录（相对本文件位置，
+ * 便于 Vite 正确 rebase url()），保证 el-icon 图标正常加载。
+ */
+$--color-primary: #245f51;
+$--font-path: '../../node_modules/element-ui/lib/theme-chalk/fonts';
+
+@import 'element-ui/packages/theme-chalk/src/index.scss';

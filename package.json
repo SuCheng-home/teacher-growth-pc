@@ -1,0 +1,47 @@
+{
+  "name": "teacher-growth-pc",
+  "version": "1.0.0",
+  "description": "南京市第十三中学 · 成长愿景 教师发展平台 (Vite + Vue 2.7)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --mode dev_test",
+    "dev:test": "vite --mode dev_test",
+    "build:test": "vite build --mode build_test",
+    "build": "vite build --mode production",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^1.0.2",
+    "auth-layout-components": "^4.0.0",
+    "auth-layout-zw": "^1.0.1",
+    "auth-zw-components": "^1.1.2",
+    "axios": "^1.7.9",
+    "dompurify": "^3.4.17",
+    "echarts": "^6.1.0",
+    "element-ui": "^2.15.14",
+    "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
+    "markdown-it": "^15.0.3",
+    "vue": "~2.7.16",
+    "vue-router": "~3.6.5",
+    "vuex": "~3.6.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue2": "^2.3.3",
+    "sass": "^1.83.0",
+    "terser": "^5.44.0",
+    "vite": "^5.4.14",
+    "vite-plugin-node-polyfills": "^0.28.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
